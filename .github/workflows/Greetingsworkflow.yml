@@ -6,6 +6,7 @@ on:
       greeting:
         description: 'Enter your greeting message'
         required: true
+        type: string
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,6 +17,6 @@ jobs:
           <html>
           <head> <title>Greeting</title></head>
           <body>
-            <h1>${{inputs.greeting}}</h1>
+            <h1>echo "${{inputs.greeting}}"</h1>
           </body>
           </html>" > index.html
