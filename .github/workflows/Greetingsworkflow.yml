@@ -23,7 +23,7 @@ jobs:
           <html>
           <head> <title>Greeting</title></head>
           <body>
-            <h1>echo "${{inputs.greeting}}"</h1>
+            <h1>"${{inputs.greeting}}"</h1>
           </body>
           </html>" > index.html
           
