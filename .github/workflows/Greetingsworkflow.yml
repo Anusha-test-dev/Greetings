@@ -2,7 +2,7 @@ name: Greetings Workflow
 
 on: 
   workflow_dispatch:
-  inputs:
+    inputs:
       greeting:
         description: 'Enter your greeting message'
         required: true
