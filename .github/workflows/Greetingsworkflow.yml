@@ -12,7 +12,7 @@ permissions:
   contents: read
 jobs:
   build:
-    if: startsWith(github.ref, 'refs/heads/feature/')
+    if: startsWith(github.ref, 'refs/heads/feature-1')
     runs-on: ubuntu-latest
     
     steps:
