@@ -1,0 +1,21 @@
+name: Greetings Workflow
+
+on: 
+  workflow_dispatch:
+  inputs:
+      greeting:
+        description: 'Enter your greeting message'
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create index.html
+        run: |
+          echo "<!DOCTYPE html>
+          <html>
+          <head> <title>Greeting</title></head>
+          <body>
+            <h1>${{input.greeting}}</h1>
+          </body>
+          </html>" > index.html
