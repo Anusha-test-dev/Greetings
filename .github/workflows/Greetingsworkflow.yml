@@ -13,7 +13,6 @@ permissions:
 jobs:
   deploy: 
   build:
-    if: startsWith(github.ref, 'refs/heads/feature/')
     runs-on: ubuntu-latest
     steps:
   
