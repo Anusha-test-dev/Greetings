@@ -7,10 +7,16 @@ on:
         description: 'Enter your greeting message'
         required: true
         type: string
+permissions: 
+  id-token: write
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        run: actions/checkout@v4
+        
       - name: Create index.html
         run: |
           echo "<!DOCTYPE html>
@@ -20,3 +26,14 @@ jobs:
             <h1>echo "${{inputs.greeting}}"</h1>
           </body>
           </html>" > index.html
+          
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::116912494636:role/github-IAMRole-assume-policy
+          aws-region: us-east-2
+      - name: Upload to S3
+        run: |
+          aws s3 cp index.html s3://greetings-from-user/index.html --content-type "text/html"
+
+    
