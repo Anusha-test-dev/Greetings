@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       greeting:
-        description: 'Enter your greeting message'
+        description: 'Enter your greeting message here'
         required: true
         type: string
 permissions: 
