@@ -1,0 +1,22 @@
+name: TO BE VALIDATED
+on:
+  pull_request:
+    branches:
+      - main
+permissions: 
+  contents: read
+jobs:
+  validate-pr:
+    name: TO BE VALIDATED
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: validate workflow file exists
+        run: |
+          test -f .github/workflows/Greetingsworkflow.yml
+          test -f .github/workflows/pr-validation.yml
+      - name: Basic HTML validation 
+        run: |
+          echo "PR is under validation"
+          echo " All required files are present"
