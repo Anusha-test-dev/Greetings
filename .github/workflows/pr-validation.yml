@@ -26,6 +26,6 @@ jobs:
           fi
       - name: Validate workflow file exists
         run: |
-          test -f .github/worflows/Greetingsworkflow.yml
+          test -f .github/workflows/Greetingsworkflow.yml
 
           
