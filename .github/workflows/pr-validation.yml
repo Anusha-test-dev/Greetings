@@ -1,21 +1,31 @@
 name: TO BE VALIDATED
-on:
+
+on: 
   pull_request:
     branches:
       - main
+      
 permissions: 
   contents: read
+
 jobs:
   validate-pr:
-    name: TO BE VALIDATED
+    name: PR Validation
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v4
-      - name: validate workflow file exists
+
+      - name: Validate Feature Branch Naming
         run: |
-          test -f .github/workflows/Greetingsworkflow.yml
-      - name: Basic HTML validation 
+          echo " Source Branch: ${{github.head_ref}}"
+          if [[! "{{ github.head_ref}}" =~ ^feature- ]]; then
+            echo " Branch name must start with feature- "
+            exit 1
+          fi
+      - name: Validate workflow file exists
         run: |
-          echo "PR is under validation"
-          echo " All required files are present"
+          test -f .github/worflows/Greetingsworkflow.yml
+
+          
