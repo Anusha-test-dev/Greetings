@@ -15,8 +15,7 @@ jobs:
       - name: validate workflow file exists
         run: |
           test -f .github/workflows/Greetingsworkflow.yml
-          test -f .github/workflows/pr-validation.yml
-      - name: Basic HTML validation 
+]      - name: Basic HTML validation 
         run: |
           echo "PR is under validation"
           echo " All required files are present"
