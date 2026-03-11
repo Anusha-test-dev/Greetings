@@ -19,7 +19,7 @@ jobs:
 
       - name: Validate Feature Branch Naming
         run: |
-          echo " Source Branch is  ${{ github.head_ref }}"
+          echo " Source Branch is '${{ github.head_ref }}' "
           if [[ ! "{{ github.head_ref}}" =~ ^feature- ]]; then
             echo " Error: Branch name must start with feature- "
             exit 1
