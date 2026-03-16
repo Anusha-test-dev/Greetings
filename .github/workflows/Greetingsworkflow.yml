@@ -16,10 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       ecr_password: ${{ steps.get-pass.outputs.password }}
+      # aws_region: ${{ steps.region.outputs.aws-region}}
 
     steps:
 
       - name: Configure AWS Credentials
+        id: region
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::116912494636:role/github-Anusha-test-dev-role
