@@ -81,6 +81,12 @@ jobs:
         password: ${{ needs.Authorization-to-AWS-using-shared-runner.outputs.ecr_password }}
 
     steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+           role-to-assume: arn:aws:iam::116912494636:role/github-Anusha-test-dev-role
+           aws-region: us-east-2
+
       - name: Checkout-Repo
         uses: actions/checkout@v4
 
