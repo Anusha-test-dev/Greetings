@@ -45,9 +45,9 @@ jobs:
         env: 
           register: 116912494636.dkr.ecr.us-east-2.amazonaws.com/greetings-workflow-image
           repository: greetings-workflow-image
-          image_tag: latest
+          image_tag: greeting:1.0
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG greeting:1.0
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
     
