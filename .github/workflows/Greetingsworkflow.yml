@@ -16,7 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-  
+
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        
       - name: Create index.html
         run: |
           echo "<!DOCTYPE html>
@@ -26,8 +29,6 @@ jobs:
             <h1>"${{inputs.greeting}}"</h1>
           </body>
           </html>" > index.html
-      - name: Checkout Repo
-        uses: actions/checkout@v4
           
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
