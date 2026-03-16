@@ -32,6 +32,7 @@ jobs:
     
     
   build-operation-using-my-image-from-ecr:
+    needs: Authorization-to-AWS-using-shared-runner
     runs-on: ubuntu-latest
     container:
       image: 116912494636.dkr.ecr.us-east-2.amazonaws.com/greetings-workflow-image:greeting
