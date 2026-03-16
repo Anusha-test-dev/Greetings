@@ -48,7 +48,7 @@ jobs:
           repository: greetings-workflow-image
           image_tag: greeting
         run: |
-          docker build -t $register/$repository:$image_tag .github/workflows/dockerfile
+          docker build -t $register/$repository:$image_tag .github/workflows
           docker push $register/$repository:$image_tag
           docker run greeting 
 
