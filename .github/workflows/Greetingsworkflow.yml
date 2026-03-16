@@ -11,45 +11,47 @@ permissions:
   id-token: write
   contents: read
 jobs:
-  build:
+  Authorization-to-AWS-using-shared-runner:
     if: startsWith(github.ref, 'refs/heads/feature-')
     runs-on: ubuntu-latest
-    
+
     steps:
 
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-        
-      - name: Create index.html
-        run: |
-          echo "<!DOCTYPE html>
-          <html>
-          <head> <title>Greeting</title></head>
-          <body>
-            <h1>"${{inputs.greeting}}"</h1>
-          </body>
-          </html>" > index.html
-          
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::116912494636:role/github-Anusha-test-dev-role
           aws-region: us-east-2
+
     #  - name: Upload to S3
-    #     run: |
+    #    run: |
     #       aws s3 cp index.html s3://greetings-from-user/index.html --content-type "text/html"
       - name: login to ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
+    
+    
+  build-operation-using-my-image-from-ecr:
+    runs-on: ubuntu-latest
+    container:
+      image: 116912494636.dkr.ecr.us-east-2.amazonaws.com/greetings-workflow-image:greeting
+    steps:
+    - name: Checkout-Repo
+      uses: actions/checkout@v4
 
-      - name: push docker image to ECR
-        env: 
-          register: 116912494636.dkr.ecr.us-east-2.amazonaws.com
-          repository: greetings-workflow-image
-          image_tag: greeting
-        run: |
-          docker build -t $register/$repository:$image_tag .github/workflows
-          docker push $register/$repository:$image_tag
-          docker run greeting 
+    - name: Create index.html
+      run: |
+        echo "<!DOCTYPE html>
+        <html>
+        <head> <title>Greeting</title></head>
+        <body>
+          <h1>"${{inputs.greeting}}"</h1>
+        </body>
+        </html>" > index.html
+
+    - name: Upload to S3
+      run: |
+        aws s3 cp index.html s3://greetings-from-user/index.html --content-type "text/html"
 
     
+
