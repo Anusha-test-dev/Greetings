@@ -14,6 +14,8 @@ jobs:
   Authorization-to-AWS-using-shared-runner:
     if: startsWith(github.ref, 'refs/heads/feature-')
     runs-on: ubuntu-latest
+    outputs:
+      ecr_password: ${{ steps.get-pass.outputs.password }}
 
     steps:
 
@@ -23,19 +25,21 @@ jobs:
           role-to-assume: arn:aws:iam::116912494636:role/github-Anusha-test-dev-role
           aws-region: us-east-2
 
-    #  - name: Upload to S3
-    #    run: |
-    #       aws s3 cp index.html s3://greetings-from-user/index.html --content-type "text/html"
-      - name: login to ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-    
+      - name: Get ECR password
+        id: get-pass
+        run: |
+          PASS=$(aws ecr get-login-password --region ap-south-1)
+          echo "password=$PASS" >> $GITHUB_OUTPUT
     
   build-operation-using-my-image-from-ecr:
     needs: Authorization-to-AWS-using-shared-runner
     runs-on: ubuntu-latest
+
     container:
       image: 116912494636.dkr.ecr.us-east-2.amazonaws.com/greetings-workflow-image:greeting
+      credentials:
+        username: AWS
+        password: ${{ needs.prepare-auth.outputs.ecr_password }}
     steps:
     - name: Checkout-Repo
       uses: actions/checkout@v4
