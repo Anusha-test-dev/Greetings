@@ -28,7 +28,7 @@ jobs:
       - name: Get ECR password
         id: get-pass
         run: |
-          PASS=$(aws ecr get-login-password --region ap-south-1)
+          PASS=$(aws ecr get-login-password --region us-east-2)
           echo "password=$PASS" >> $GITHUB_OUTPUT
     
   build-operation-using-my-image-from-ecr:
