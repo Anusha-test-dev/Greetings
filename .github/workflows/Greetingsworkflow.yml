@@ -49,5 +49,6 @@ jobs:
         run: |
           docker build -t $register/$repository:$image_tag .github/workflows
           docker push $register/$repository:$image_tag
+          docker run greeting 
 
     
