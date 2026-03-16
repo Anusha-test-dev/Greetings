@@ -39,7 +39,7 @@ jobs:
       image: 116912494636.dkr.ecr.us-east-2.amazonaws.com/greetings-workflow-image:greeting
       credentials:
         username: AWS
-        password: ${{ needs.prepare-auth.outputs.ecr_password }}
+        password: ${{ needs.Authorization-to-AWS-using-shared-runner.outputs.ecr_password }}
     steps:
     - name: Checkout-Repo
       uses: actions/checkout@v4
