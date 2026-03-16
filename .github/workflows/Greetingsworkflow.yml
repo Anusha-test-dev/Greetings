@@ -43,11 +43,11 @@ jobs:
 
       - name: push docker image to ECR
         env: 
-          register: 116912494636.dkr.ecr.us-east-2.amazonaws.com/greetings-workflow-image
+          register: 116912494636.dkr.ecr.us-east-2.amazonaws.com
           repository: greetings-workflow-image
           image_tag: greeting:1.0
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .github/workflows
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker build -t $register/$repository:$image_tag .github/workflows
+          docker push $register/$repository:$image_tag
 
     
