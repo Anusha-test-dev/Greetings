@@ -26,6 +26,8 @@ jobs:
             <h1>"${{inputs.greeting}}"</h1>
           </body>
           </html>" > index.html
+      - name: Checkout Repo
+        uses: actions/checkout@v4
           
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -45,7 +47,7 @@ jobs:
           repository: greetings-workflow-image
           image_tag: latest
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG greeting:1.0
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
     
