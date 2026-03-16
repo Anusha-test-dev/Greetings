@@ -35,5 +35,17 @@ jobs:
       - name: Upload to S3
         run: |
           aws s3 cp index.html s3://greetings-from-user/index.html --content-type "text/html"
+      - name: login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: push docker image to ECR
+        env: 
+          register: 116912494636.dkr.ecr.us-east-2.amazonaws.com/greetings-workflow-image
+          repository: greetings-workflow-image
+          image_tag: latest
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
     
