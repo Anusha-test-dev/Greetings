@@ -43,6 +43,22 @@ jobs:
         username: AWS
         password: ${{ needs.Authorization-to-AWS-using-shared-runner.outputs.ecr_password }}
     steps:
+    - name: Build Docker image
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: greetings-workflow-image
+        IMAGE_TAG: greeting
+      run: |
+        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+
+    - name: Push Docker image to ECR
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: greetings-workflow-image
+        IMAGE_TAG: greeting
+      run: |
+        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
     - name: Checkout-Repo
       uses: actions/checkout@v4
 
