@@ -1,25 +1,25 @@
 name: Greetings Workflow
 
-on: 
+on:
   workflow_dispatch:
     inputs:
       greeting:
         description: 'Enter your greeting message here'
         required: true
         type: string
-permissions: 
+
+permissions:
   id-token: write
   contents: read
+
 jobs:
   Authorization-to-AWS-using-shared-runner:
     if: startsWith(github.ref, 'refs/heads/feature-')
     runs-on: ubuntu-latest
     outputs:
       ecr_password: ${{ steps.get-pass.outputs.password }}
-      # aws_region: ${{ steps.region.outputs.aws-region}}
 
     steps:
-
       - name: Configure AWS Credentials
         id: region
         uses: aws-actions/configure-aws-credentials@v4
@@ -32,9 +32,46 @@ jobs:
         run: |
           PASS=$(aws ecr get-login-password --region us-east-2)
           echo "password=$PASS" >> $GITHUB_OUTPUT
-    
-  build-operation-using-my-image-from-ecr:
+
+  build-and-push-image-to-ecr:
+    if: startsWith(github.ref, 'refs/heads/feature-')
     needs: Authorization-to-AWS-using-shared-runner
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::116912494636:role/github-Anusha-test-dev-role
+          aws-region: us-east-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker image
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: greetings-workflow-image
+          IMAGE_TAG: greeting
+        run: |
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+
+      - name: Push Docker image to ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: greetings-workflow-image
+          IMAGE_TAG: greeting
+        run: |
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+  build-operation-using-my-image-from-ecr:
+    needs:
+      - Authorization-to-AWS-using-shared-runner
+      - build-and-push-image-to-ecr
     runs-on: ubuntu-latest
 
     container:
@@ -42,39 +79,21 @@ jobs:
       credentials:
         username: AWS
         password: ${{ needs.Authorization-to-AWS-using-shared-runner.outputs.ecr_password }}
+
     steps:
-    - name: Build Docker image
-      env:
-        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: greetings-workflow-image
-        IMAGE_TAG: greeting
-      run: |
-        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+      - name: Checkout-Repo
+        uses: actions/checkout@v4
 
-    - name: Push Docker image to ECR
-      env:
-        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: greetings-workflow-image
-        IMAGE_TAG: greeting
-      run: |
-        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+      - name: Create index.html
+        run: |
+          echo "<!DOCTYPE html>
+          <html>
+          <head> <title>Greeting</title></head>
+          <body>
+            <h1>"${{inputs.greeting}}"</h1>
+          </body>
+          </html>" > index.html
 
-    - name: Checkout-Repo
-      uses: actions/checkout@v4
-
-    - name: Create index.html
-      run: |
-        echo "<!DOCTYPE html>
-        <html>
-        <head> <title>Greeting</title></head>
-        <body>
-          <h1>"${{inputs.greeting}}"</h1>
-        </body>
-        </html>" > index.html
-
-    - name: Upload to S3
-      run: |
-        aws s3 cp index.html s3://greetings-from-user/index.html --content-type "text/html"
-
-    
-
+      - name: Upload to S3
+        run: |
+          aws s3 cp index.html s3://greetings-from-user/index.html --content-type "text/html"
